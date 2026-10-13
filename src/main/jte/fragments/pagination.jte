@@ -22,7 +22,7 @@
 }
 
 @if(totalPages > 0)
-    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-3">
         <p class="text-sm text-gray-500">
             Showing ${currentPage * page.pageSize() + 1}
             to ${Math.min(
