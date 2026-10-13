@@ -20,6 +20,7 @@ import jakarta.validation.constraints.Size;
  */
 @Entity
 @Table(name = "articles", indexes = {
+        @Index(name = "idx_article_title",    columnList = "title"),
         @Index(name = "idx_article_slug",      columnList = "slug",      unique = true),
         @Index(name = "idx_article_published", columnList = "published"),
         @Index(name = "idx_article_author",    columnList = "author")
