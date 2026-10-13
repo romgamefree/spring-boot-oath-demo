@@ -1,6 +1,7 @@
 @import dev.danvega.common.web.PagedResult
-@import dev.danvega.model.StaticPage
 @import dev.danvega.config.CsrfHiddenInput
+@import dev.danvega.model.StaticPage
+@import java.net.URLEncoder
 
 @param PagedResult<StaticPage> pages
 @param String search = ""
@@ -11,7 +12,7 @@
     String queryString = "";
 
     if (search != null && !search.isBlank()) {
-        queryString += "&search=" + java.net.URLEncoder.encode(
+        queryString += "&search=" + URLEncoder.encode(
             search,
             java.nio.charset.StandardCharsets.UTF_8
         );
