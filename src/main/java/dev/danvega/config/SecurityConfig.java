@@ -1,4 +1,4 @@
-package dev.danvega;
+package dev.danvega.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,17 +20,18 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authorize -> authorize
-                    .requestMatchers("/", "/login", "/error").permitAll()
+                    .requestMatchers("/", "/articles/**", "/pages/**", "/login", "/error", "/error/**").permitAll()
+                    .requestMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             )
             .formLogin(form -> form
                     .loginPage("/login")
-                    .defaultSuccessUrl("/dashboard", true)
+                    .defaultSuccessUrl("/admin", true)
                     .permitAll()
             )
             .oauth2Login(oauth2 -> oauth2
                     .loginPage("/login")
-                    .defaultSuccessUrl("/dashboard", true)
+                    .defaultSuccessUrl("/admin", true)
             )
             .logout(logout -> logout
                     .logoutSuccessUrl("/")

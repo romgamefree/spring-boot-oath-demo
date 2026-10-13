@@ -1,4 +1,4 @@
-package dev.danvega;
+package dev.danvega.config;
 
 import gg.jte.Content;
 import gg.jte.TemplateOutput;

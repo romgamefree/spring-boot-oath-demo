@@ -1,4 +1,4 @@
-package dev.danvega;
+package dev.danvega.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.web.csrf.CsrfToken;

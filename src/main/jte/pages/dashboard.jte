@@ -1,6 +1,6 @@
 @import org.springframework.security.core.GrantedAuthority
 @import java.util.Collection
-@import dev.danvega.CsrfHiddenInput
+@import dev.danvega.config.CsrfHiddenInput
 
 @param String username = ""
 @param String email = null

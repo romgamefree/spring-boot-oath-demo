@@ -1,5 +1,4 @@
-package dev.danvega;
-
+package dev.danvega.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -18,10 +17,5 @@ public class LoginController {
         }
 
         return "pages/login";
-    }
-
-    @GetMapping("/")
-    public String home() {
-        return "pages/home";
     }
 }

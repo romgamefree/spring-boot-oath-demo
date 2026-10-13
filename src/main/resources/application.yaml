@@ -1,6 +1,8 @@
 spring:
   application:
     name: jte-login
+  jpa:
+    open-in-view: false          # tránh giữ connection DB suốt lúc render JTE
   security:
     oauth2:
       client:
@@ -8,22 +10,44 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
-            scope:
-              - email
-              - profile
+            scope: [email, profile]
           github:
             client-id: ${GITHUB_CLIENT_ID}
             client-secret: ${GITHUB_CLIENT_SECRET}
-            scope:
-              - user:email
-              - read:user
-
+            scope: [user:email, read:user]
 gg:
   jte:
     developmentMode: true
+server:
+  shutdown: graceful
+  forward-headers-strategy: framework
+  error:
+    include-stacktrace: never
+    include-message: never
+    include-binding-errors: never
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+
+# ── AOP Logging ──────────────────────────────────────────────────────────────
 logging:
   level:
-    org:
-      springframework:
-        security: ERROR #change to DEBUG or INFO for more information about spring security
+    # LoggingAspect: thay đổi sang DEBUG để thấy log thời gian thực thi
+    dev.danvega.aspect.LoggingAspect: DEBUG
+    # PerformanceAspect: DEBUG cho normal, WARN tự động khi chậm
+    dev.danvega.aspect.PerformanceAspect: DEBUG
+    # Audit log luôn ở INFO để ghi mọi thao tác admin
+    AUDIT.dev.danvega.aspect.SecurityAuditAspect: INFO

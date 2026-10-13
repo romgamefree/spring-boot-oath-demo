@@ -1,4 +1,4 @@
-package dev.danvega;
+package dev.danvega.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;

@@ -1,4 +1,4 @@
-@import dev.danvega.CsrfHiddenInput
+@import dev.danvega.config.CsrfHiddenInput
 
 @param Boolean error = false
 @param String errorMessage = null
