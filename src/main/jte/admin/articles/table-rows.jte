@@ -1,7 +1,8 @@
 @import dev.danvega.common.web.PagedResult
-@import dev.danvega.model.Article
-@import java.time.format.DateTimeFormatter
 @import dev.danvega.config.CsrfHiddenInput
+@import dev.danvega.model.Article
+@import java.net.URLEncoder
+@import java.time.format.DateTimeFormatter
 
 @param CsrfHiddenInput csrfHiddenInput
 @param PagedResult<Article> articles
@@ -12,7 +13,7 @@
     String queryString = "";
 
     if (search != null && !search.isBlank()) {
-        queryString += "&search=" + java.net.URLEncoder.encode(
+        queryString += "&search=" + URLEncoder.encode(
             search,
             java.nio.charset.StandardCharsets.UTF_8
         );
