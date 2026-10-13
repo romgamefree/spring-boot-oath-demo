@@ -34,7 +34,7 @@
 
         @if(page.isPaged())
             <nav aria-label="Pagination">
-                <ul class="flex items-center gap-1">
+                <ul class="flex items-center gap-1">jte
 
                     <%-- Previous --%>
                     <li>
