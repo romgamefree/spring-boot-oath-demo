@@ -1,6 +1,11 @@
 spring:
   application:
     name: jte-login
+  threads:
+    virtual:
+      enabled: true
+    main:
+      keep-alive: true
   jpa:
     open-in-view: false          # tránh giữ connection DB suốt lúc render JTE
   security:
