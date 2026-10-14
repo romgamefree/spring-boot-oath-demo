@@ -6,6 +6,7 @@ import dev.danvega.exception.BusinessException;
 import dev.danvega.exception.ResourceNotFoundException;
 import dev.danvega.model.Article;
 import dev.danvega.repository.ArticleRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.resilience.annotation.ConcurrencyLimit;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.List;
  */
 @Service
 @Transactional(readOnly = true)
+@Slf4j
 public class ArticleService extends BaseService<Article, Long> {
 
     private final ArticleRepository articleRepository;
@@ -49,6 +51,7 @@ public class ArticleService extends BaseService<Article, Long> {
      * @param published lọc theo trạng thái published (null = tất cả)
      */
     public PagedResult<Article> searchArticles(String search, Boolean published, Pageable pageable) {
+        log.info("Searching articles ...");
         return PagedResult.from(articleRepository.searchArticles(search, published, pageable));
     }
 

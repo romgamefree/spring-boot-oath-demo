@@ -1,13 +1,14 @@
 spring:
   application:
     name: jte-login
+
   threads:
     virtual:
       enabled: true
-    main:
-      keep-alive: true
+
   jpa:
-    open-in-view: false          # tránh giữ connection DB suốt lúc render JTE
+    open-in-view: false
+
   security:
     oauth2:
       client:
@@ -20,39 +21,21 @@ spring:
             client-id: ${GITHUB_CLIENT_ID}
             client-secret: ${GITHUB_CLIENT_SECRET}
             scope: [user:email, read:user]
+
 gg:
   jte:
     developmentMode: true
-server:
-  shutdown: graceful
-  forward-headers-strategy: framework
-  error:
-    include-stacktrace: never
-    include-message: never
-    include-binding-errors: never
 
 management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,prometheus
-  endpoint:
-    health:
-      probes:
-        enabled: true
-  metrics:
-    tags:
-      application: ${spring.application.name}
-    distribution:
-      percentiles-histogram:
-        http.server.requests: true
+  tracing:
+    sampling:
+      probability: 1.0
 
-# ── AOP Logging ──────────────────────────────────────────────────────────────
+server:
+  shutdown: immediate
+
 logging:
   level:
-    # LoggingAspect: thay đổi sang DEBUG để thấy log thời gian thực thi
-    dev.danvega.aspect.LoggingAspect: DEBUG
-    # PerformanceAspect: DEBUG cho normal, WARN tự động khi chậm
-    dev.danvega.aspect.PerformanceAspect: DEBUG
-    # Audit log luôn ở INFO để ghi mọi thao tác admin
-    AUDIT.dev.danvega.aspect.SecurityAuditAspect: INFO
+    dev.danvega: INFO
+    org.springframework.boot.actuator.autoconfigure.opentelemetry: DEBUG
+    org.springframework.boot.docker.compose: DEBUG
