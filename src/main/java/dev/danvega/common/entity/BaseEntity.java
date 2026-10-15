@@ -32,8 +32,13 @@ import java.time.LocalDateTime;
  * }
  * }</pre>
  */
+import lombok.Getter;
+import lombok.Setter;
+
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+@Getter
+@Setter
 public abstract class BaseEntity {
 
     @Id
@@ -55,21 +60,4 @@ public abstract class BaseEntity {
     @LastModifiedBy
     @Column(name = "last_modified_by", length = 100)
     private String lastModifiedBy;
-
-    // ── Getters & Setters ────────────────────────────────────────────────────
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
-
-    public String getCreatedBy() { return createdBy; }
-    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
-
-    public String getLastModifiedBy() { return lastModifiedBy; }
-    public void setLastModifiedBy(String lastModifiedBy) { this.lastModifiedBy = lastModifiedBy; }
 }

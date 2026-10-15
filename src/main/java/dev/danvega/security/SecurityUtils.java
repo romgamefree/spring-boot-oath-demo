@@ -86,11 +86,42 @@ public final class SecurityUtils {
      * @param role tên role bao gồm prefix, ví dụ {@code "ROLE_ADMIN"}
      */
     public static boolean hasRole(String role) {
+        String roleWithPrefix = role.startsWith("ROLE_") ? role : "ROLE_" + role;
         return getAuthentication()
                 .stream()
                 .flatMap(auth -> auth.getAuthorities().stream())
                 .map(GrantedAuthority::getAuthority)
-                .anyMatch(role::equals);
+                .anyMatch(a -> a.equals(role) || a.equals(roleWithPrefix));
+    }
+
+    /**
+     * Kiểm tra user hiện tại có permission/authority cụ thể hay không.
+     *
+     * @param authority tên quyền, ví dụ {@code "article:write"}, {@code "user:delete"}
+     */
+    public static boolean hasAuthority(String authority) {
+        return getAuthentication()
+                .stream()
+                .flatMap(auth -> auth.getAuthorities().stream())
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(authority::equalsIgnoreCase);
+    }
+
+    /**
+     * Shortcut alias cho hasAuthority.
+     */
+    public static boolean hasPermission(String permission) {
+        return hasAuthority(permission);
+    }
+
+    /**
+     * Lấy SecurityUser nếu đang đăng nhập qua form-login.
+     */
+    public static Optional<SecurityUser> getCurrentSecurityUser() {
+        return getAuthentication()
+                .map(Authentication::getPrincipal)
+                .filter(p -> p instanceof SecurityUser)
+                .map(p -> (SecurityUser) p);
     }
 
     // ── Private Helpers ──────────────────────────────────────────────────────

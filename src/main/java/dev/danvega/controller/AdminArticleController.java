@@ -3,8 +3,6 @@ package dev.danvega.controller;
 import dev.danvega.common.web.FlashMessage;
 import dev.danvega.common.web.HtmxUtils;
 import dev.danvega.config.CsrfHiddenInput;
-import dev.danvega.dto.ArticleCreateRequest;
-import dev.danvega.dto.ArticleUpdateRequest;
 import dev.danvega.model.Article;
 import dev.danvega.service.ArticleService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -71,28 +69,27 @@ public class AdminArticleController {
     }
 
     @PostMapping
-    public String save(@Valid @ModelAttribute ArticleCreateRequest request, RedirectAttributes ra) {
-        Article article = new Article();
-        article.setTitle(request.getTitle());
-        article.setContent(request.getContent());
-        article.setSlug(request.getSlug());
-        article.setAuthor(request.getAuthor());
-        article.setPublished(request.getPublished());
+    public String save(@ModelAttribute Article article, RedirectAttributes ra) {
+        if (article.getPublished() == null) {
+            article.setPublished(false);
+        }
         articleService.save(article);
         FlashMessage.success("Bài viết \"" + article.getTitle() + "\" đã được tạo thành công").addTo(ra);
         return "redirect:/admin/articles";
     }
 
-    @PostMapping("/{id}")
+    @RequestMapping(value = "/{id}", method = {RequestMethod.POST, RequestMethod.PUT})
     public String update(@PathVariable Long id,
-                         @Valid @ModelAttribute ArticleUpdateRequest request,
+                         @ModelAttribute Article input,
                          RedirectAttributes ra) {
         Article article = articleService.findById(id);
-        article.setTitle(request.getTitle());
-        article.setContent(request.getContent());
-        article.setSlug(request.getSlug());
-        article.setAuthor(request.getAuthor());
-        article.setPublished(request.getPublished());
+        article.setTitle(input.getTitle());
+        article.setContent(input.getContent());
+        if (input.getSlug() != null && !input.getSlug().isBlank()) {
+            article.setSlug(input.getSlug().trim());
+        }
+        article.setAuthor(input.getAuthor());
+        article.setPublished(Boolean.TRUE.equals(input.getPublished()));
         articleService.save(article);
         FlashMessage.success("Bài viết đã được cập nhật").addTo(ra);
         return "redirect:/admin/articles";

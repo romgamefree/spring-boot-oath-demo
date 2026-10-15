@@ -18,6 +18,8 @@ import jakarta.validation.constraints.Size;
  * private String category;
  * }</pre>
  */
+import lombok.*;
+
 @Entity
 @Table(name = "articles", indexes = {
         @Index(name = "idx_article_title",    columnList = "title"),
@@ -25,6 +27,11 @@ import jakarta.validation.constraints.Size;
         @Index(name = "idx_article_published", columnList = "published"),
         @Index(name = "idx_article_author",    columnList = "author")
 })
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Article extends BaseEntity {
 
     @NotBlank(message = "Tiêu đề không được để trống")
@@ -45,6 +52,7 @@ public class Article extends BaseEntity {
     private String author;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean published = false;
 
     // ── Lifecycle hooks ───────────────────────────────────────────────────────
@@ -75,21 +83,4 @@ public class Article extends BaseEntity {
                 .replaceAll("-{2,}", "-")
                 .replaceAll("^-|-$", "");
     }
-
-    // ── Getters & Setters ─────────────────────────────────────────────────────
-
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
-
-    public String getSlug() { return slug; }
-    public void setSlug(String slug) { this.slug = slug; }
-
-    public String getAuthor() { return author; }
-    public void setAuthor(String author) { this.author = author; }
-
-    public Boolean getPublished() { return published; }
-    public void setPublished(Boolean published) { this.published = published; }
 }

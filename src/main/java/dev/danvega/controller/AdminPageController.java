@@ -52,6 +52,9 @@ public class AdminPageController {
 
     @PostMapping
     public String save(@ModelAttribute StaticPage page, RedirectAttributes ra) {
+        if (page.getPublished() == null) {
+            page.setPublished(false);
+        }
         pageService.save(page);
         FlashMessage.success("Trang \"" + page.getTitle() + "\" đã được tạo thành công").addTo(ra);
         return "redirect:/admin/pages";
@@ -63,9 +66,15 @@ public class AdminPageController {
         return "admin/pages/form";
     }
 
-    @PostMapping("/{id}")
-    public String update(@PathVariable Long id, @ModelAttribute StaticPage page, RedirectAttributes ra) {
-        page.setId(id);
+    @RequestMapping(value = "/{id}", method = {RequestMethod.POST, RequestMethod.PUT})
+    public String update(@PathVariable Long id, @ModelAttribute StaticPage input, RedirectAttributes ra) {
+        StaticPage page = pageService.findById(id);
+        page.setTitle(input.getTitle());
+        page.setContent(input.getContent());
+        if (input.getSlug() != null && !input.getSlug().isBlank()) {
+            page.setSlug(input.getSlug().trim());
+        }
+        page.setPublished(Boolean.TRUE.equals(input.getPublished()));
         pageService.save(page);
         FlashMessage.success("Trang đã được cập nhật").addTo(ra);
         return "redirect:/admin/pages";
