@@ -1,6 +1,8 @@
 @import org.springframework.security.web.csrf.CsrfToken
+@import dev.danvega.common.web.FlashMessage
 
 @param gg.jte.Content content
+@param FlashMessage flash = null
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,6 +15,14 @@
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
 <body class="bg-gray-100">
-${content}
+    <!-- Toast container -->
+    !{ var currentFlash = flash != null ? flash : dev.danvega.common.web.FlashMessage.getCurrent(); }
+    <div id="toast-area" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
+        @if (currentFlash != null)
+            @template.fragments.toast(message = currentFlash.message(), type = currentFlash.typeString())
+        @endif
+    </div>
+
+    ${content}
 </body>
 </html>

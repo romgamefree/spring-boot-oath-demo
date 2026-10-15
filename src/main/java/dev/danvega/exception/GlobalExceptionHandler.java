@@ -258,9 +258,10 @@ public class GlobalExceptionHandler {
         res.setHeader("HX-Reswap", "beforeend");
         res.setStatus(status);
 
-        ModelAndView mv = new ModelAndView("fragments/error-toast");
+        ModelAndView mv = new ModelAndView("fragments/toast");
         mv.addObject("message", message);
         mv.addObject("code", code);
+        mv.addObject("type", "error");
         return mv;
     }
 

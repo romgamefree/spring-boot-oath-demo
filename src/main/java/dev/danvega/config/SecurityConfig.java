@@ -26,15 +26,33 @@ public class SecurityConfig {
             )
             .formLogin(form -> form
                     .loginPage("/login")
-                    .defaultSuccessUrl("/admin", true)
+                    .successHandler((request, response, authentication) -> {
+                        org.springframework.web.servlet.FlashMap flashMap = new org.springframework.web.servlet.FlashMap();
+                        flashMap.put(dev.danvega.common.web.FlashMessage.FLASH_ATTR,
+                                dev.danvega.common.web.FlashMessage.success("Đăng nhập thành công! Chào mừng " + authentication.getName()));
+                        new org.springframework.web.servlet.support.SessionFlashMapManager().saveOutputFlashMap(flashMap, request, response);
+                        response.sendRedirect("/admin");
+                    })
                     .permitAll()
             )
             .oauth2Login(oauth2 -> oauth2
                     .loginPage("/login")
-                    .defaultSuccessUrl("/admin", true)
+                    .successHandler((request, response, authentication) -> {
+                        org.springframework.web.servlet.FlashMap flashMap = new org.springframework.web.servlet.FlashMap();
+                        flashMap.put(dev.danvega.common.web.FlashMessage.FLASH_ATTR,
+                                dev.danvega.common.web.FlashMessage.success("Đăng nhập thành công qua OAuth2!"));
+                        new org.springframework.web.servlet.support.SessionFlashMapManager().saveOutputFlashMap(flashMap, request, response);
+                        response.sendRedirect("/admin");
+                    })
             )
             .logout(logout -> logout
-                    .logoutSuccessUrl("/")
+                    .logoutSuccessHandler((request, response, authentication) -> {
+                        org.springframework.web.servlet.FlashMap flashMap = new org.springframework.web.servlet.FlashMap();
+                        flashMap.put(dev.danvega.common.web.FlashMessage.FLASH_ATTR,
+                                dev.danvega.common.web.FlashMessage.info("Bạn đã đăng xuất thành công"));
+                        new org.springframework.web.servlet.support.SessionFlashMapManager().saveOutputFlashMap(flashMap, request, response);
+                        response.sendRedirect("/login");
+                    })
                     .permitAll()
             );
 

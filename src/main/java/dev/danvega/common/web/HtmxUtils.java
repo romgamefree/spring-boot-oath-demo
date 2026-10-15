@@ -101,6 +101,19 @@ public final class HtmxUtils {
     }
 
     /**
+     * Kích hoạt toast qua HTMX HX-Trigger header.
+     *
+     * @param response HttpServletResponse
+     * @param message  nội dung thông báo
+     * @param type     loại toast (info, success, warning, error)
+     */
+    public static void triggerToast(HttpServletResponse response, String message, String type) {
+        String safeMsg = message == null ? "" : message.replace("\"", "\\\"");
+        String safeType = type == null ? "info" : type.replace("\"", "\\\"");
+        triggerWithDetail(response, "{\"showToast\": {\"message\": \"" + safeMsg + "\", \"type\": \"" + safeType + "\"}}");
+    }
+
+    /**
      * Cập nhật URL browser history sau HTMX swap.
      */
     public static void pushUrl(HttpServletResponse response, String url) {

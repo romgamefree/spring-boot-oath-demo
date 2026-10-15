@@ -59,6 +59,40 @@ public record FlashMessage(Type type, String message) {
         ra.addFlashAttribute(FLASH_ATTR, this);
     }
 
+    /**
+     * Thêm flash message vào {@link org.springframework.ui.Model} để hiển thị khi render trực tiếp view.
+     */
+    public void addTo(org.springframework.ui.Model model) {
+        model.addAttribute(FLASH_ATTR, this);
+    }
+
+    /**
+     * Thêm flash message vào {@link jakarta.servlet.http.HttpServletRequest}.
+     */
+    public void addTo(jakarta.servlet.http.HttpServletRequest request) {
+        request.setAttribute(FLASH_ATTR, this);
+    }
+
+    /**
+     * Lấy FlashMessage hiện tại từ request attributes hoặc flash attributes sau redirect.
+     */
+    public static FlashMessage getCurrent() {
+        org.springframework.web.context.request.RequestAttributes attrs =
+                org.springframework.web.context.request.RequestContextHolder.getRequestAttributes();
+        if (attrs instanceof org.springframework.web.context.request.ServletRequestAttributes sra) {
+            jakarta.servlet.http.HttpServletRequest req = sra.getRequest();
+            Object flash = req.getAttribute(FLASH_ATTR);
+            if (flash instanceof FlashMessage fm) {
+                return fm;
+            }
+            java.util.Map<String, ?> flashMap = org.springframework.web.servlet.support.RequestContextUtils.getInputFlashMap(req);
+            if (flashMap != null && flashMap.get(FLASH_ATTR) instanceof FlashMessage fm) {
+                return fm;
+            }
+        }
+        return null;
+    }
+
     /** CSS class Tailwind tương ứng với loại message (dùng trong JTE template). */
     public String cssClass() {
         return switch (type) {
@@ -77,5 +111,10 @@ public record FlashMessage(Type type, String message) {
             case WARNING -> "⚠";
             case INFO    -> "ℹ";
         };
+    }
+
+    /** Trả về type name dạng lowercase để dùng trong toast fragment. */
+    public String typeString() {
+        return type.name().toLowerCase();
     }
 }

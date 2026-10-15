@@ -3,9 +3,13 @@ package dev.danvega.controller;
 import dev.danvega.common.web.FlashMessage;
 import dev.danvega.common.web.HtmxUtils;
 import dev.danvega.config.CsrfHiddenInput;
+import dev.danvega.dto.ArticleCreateRequest;
+import dev.danvega.dto.ArticleUpdateRequest;
 import dev.danvega.model.Article;
 import dev.danvega.service.ArticleService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -67,7 +71,13 @@ public class AdminArticleController {
     }
 
     @PostMapping
-    public String save(@ModelAttribute Article article, RedirectAttributes ra) {
+    public String save(@Valid @ModelAttribute ArticleCreateRequest request, RedirectAttributes ra) {
+        Article article = new Article();
+        article.setTitle(request.getTitle());
+        article.setContent(request.getContent());
+        article.setSlug(request.getSlug());
+        article.setAuthor(request.getAuthor());
+        article.setPublished(request.getPublished());
         articleService.save(article);
         FlashMessage.success("Bài viết \"" + article.getTitle() + "\" đã được tạo thành công").addTo(ra);
         return "redirect:/admin/articles";
@@ -75,9 +85,14 @@ public class AdminArticleController {
 
     @PostMapping("/{id}")
     public String update(@PathVariable Long id,
-                         @ModelAttribute Article article,
+                         @Valid @ModelAttribute ArticleUpdateRequest request,
                          RedirectAttributes ra) {
-        article.setId(id);
+        Article article = articleService.findById(id);
+        article.setTitle(request.getTitle());
+        article.setContent(request.getContent());
+        article.setSlug(request.getSlug());
+        article.setAuthor(request.getAuthor());
+        article.setPublished(request.getPublished());
         articleService.save(article);
         FlashMessage.success("Bài viết đã được cập nhật").addTo(ra);
         return "redirect:/admin/articles";
@@ -90,11 +105,13 @@ public class AdminArticleController {
                          @RequestParam(required = false) String search,
                          @RequestParam(required = false) Boolean published,
                          HttpServletRequest request,
+                         HttpServletResponse response,
                          Model model,
                          RedirectAttributes ra) {
         articleService.deleteById(id);
 
         if (HtmxUtils.isHtmxRequest(request)) {
+            HtmxUtils.triggerToast(response, "Bài viết đã được xóa", "success");
             Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
             model.addAttribute("articles", articleService.searchArticles(search, published, pageable));
             model.addAttribute("search",    search);
