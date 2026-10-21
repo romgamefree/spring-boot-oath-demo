@@ -6,6 +6,7 @@ import dev.danvega.model.Permission;
 import dev.danvega.model.Role;
 import dev.danvega.repository.PermissionRepository;
 import dev.danvega.repository.RoleRepository;
+import dev.danvega.repository.UserRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -23,18 +24,20 @@ public class RoleService {
 
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
+    private final UserRepository userRepository;
 
-    public RoleService(RoleRepository roleRepository, PermissionRepository permissionRepository) {
+    public RoleService(RoleRepository roleRepository, PermissionRepository permissionRepository, UserRepository userRepository) {
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Role> findAll() {
-        return roleRepository.findAll(Sort.by("name").ascending());
+        return roleRepository.findAllWithPermissions();
     }
 
     public Role findById(Long id) {
-        return roleRepository.findById(id)
+        return roleRepository.findByIdWithPermissions(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Role", "id", id));
     }
 
@@ -101,6 +104,12 @@ public class RoleService {
         if ("ROLE_ADMIN".equalsIgnoreCase(role.getName()) || "ROLE_USER".equalsIgnoreCase(role.getName())) {
             throw new BusinessException("CANNOT_DELETE_SYSTEM_ROLE", "Không thể xóa vai trò hệ thống mặc định");
         }
+        
+        long userCount = userRepository.countUsersByRoleId(id);
+        if (userCount > 0) {
+            throw new BusinessException("ROLE_IN_USE", "Không thể xóa vai trò này vì đang được sử dụng bởi " + userCount + " người dùng");
+        }
+        
         roleRepository.deleteById(id);
     }
 }

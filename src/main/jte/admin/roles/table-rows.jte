@@ -72,15 +72,16 @@
                                     Chỉnh sửa
                                 </a>
                                 @if(!"ROLE_ADMIN".equalsIgnoreCase(r.getName()) && !"ROLE_USER".equalsIgnoreCase(r.getName()))
-                                    <form action="/admin/roles/${r.getId()}/delete"
+                                    <form id="delete-role-${r.getId()}" action="/admin/roles/${r.getId()}/delete"
                                           method="post"
                                           hx-post="/admin/roles/${r.getId()}/delete"
                                           hx-target="#roles-table"
-                                          hx-confirm="Bạn có chắc chắn muốn xóa vai trò này?"
-                                          class="inline">
+                                          hx-swap="innerHTML"
+                                          class="inline ml-2">
                                         ${csrf}
-                                        <button type="submit"
-                                                class="text-red-600 hover:text-red-900 ml-2">
+                                        <button type="button"
+                                                onclick="showDeleteModal(document.getElementById('delete-role-${r.getId()}'), 'Are you sure you want to delete this role?')"
+                                                class="text-red-600 hover:text-red-900">
                                             Xóa
                                         </button>
                                     </form>

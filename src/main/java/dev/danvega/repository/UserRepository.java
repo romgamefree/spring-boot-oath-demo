@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -21,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail(String email);
 
-    @Query("SELECT DISTINCT u FROM User u LEFT JOIN u.roles r WHERE " +
+    @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles r WHERE " +
            "(:search IS NULL OR :search = '' OR " +
            " LOWER(u.username) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
            " LOWER(u.fullName) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
@@ -32,4 +33,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
                            @Param("roleId") Long roleId,
                            @Param("enabled") Boolean enabled,
                            Pageable pageable);
+
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.id = :id")
+    Optional<User> findByIdWithRoles(@Param("id") Long id);
+
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles ORDER BY u.username")
+    List<User> findAllWithRoles();
+
+    @Query("SELECT COUNT(u) FROM User u JOIN u.roles r WHERE r.id = :roleId")
+    long countUsersByRoleId(@Param("roleId") Long roleId);
 }

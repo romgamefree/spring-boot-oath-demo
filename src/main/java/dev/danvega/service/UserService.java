@@ -79,7 +79,8 @@ public class UserService extends BaseService<User, Long> {
 
     @Transactional
     public User updateUser(Long id, User input, String newPassword, Set<Long> roleIds) {
-        User user = findById(id);
+        User user = userRepository.findByIdWithRoles(id)
+                .orElseThrow(() -> new dev.danvega.exception.ResourceNotFoundException("User", "id", id));
 
         if (input.getEmail() != null && !input.getEmail().isBlank()) {
             String cleanEmail = input.getEmail().trim().toLowerCase();

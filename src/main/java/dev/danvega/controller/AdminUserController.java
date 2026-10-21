@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -37,6 +38,7 @@ public class AdminUserController {
     }
 
     @GetMapping
+    @Transactional(readOnly = true)
     public String list(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -60,6 +62,7 @@ public class AdminUserController {
     }
 
     @GetMapping("/new")
+    @Transactional(readOnly = true)
     public String createForm(Model model) {
         model.addAttribute("user", new User());
         model.addAttribute("roles", roleService.findAll());
@@ -79,6 +82,7 @@ public class AdminUserController {
     }
 
     @GetMapping("/{id}/edit")
+    @Transactional(readOnly = true)
     public String editForm(@PathVariable Long id, Model model) {
         User user = userService.findById(id);
         model.addAttribute("user", user);
@@ -100,6 +104,7 @@ public class AdminUserController {
     }
 
     @PostMapping("/{id}/toggle-status")
+    @Transactional(readOnly = true)
     public String toggleStatus(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page,

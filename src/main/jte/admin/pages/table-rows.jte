@@ -58,13 +58,18 @@
                     <a href="/admin/pages/${page.getId()}/edit"
                        class="text-indigo-600 hover:text-indigo-900 mr-4">Edit</a>
 
-                    <form action="/admin/pages/${page.getId()}/delete" method="post" style="display:inline"
+                    <form id="delete-page-${page.getId()}" action="/admin/pages/${page.getId()}/delete?page=${pages.currentPage()}&size=${pages.pageSize()}${queryString}"
+                          method="post"
                           hx-post="/admin/pages/${page.getId()}/delete?page=${pages.currentPage()}&size=${pages.pageSize()}${queryString}"
                           hx-target="#pages-table"
                           hx-swap="innerHTML"
-                          hx-confirm="Are you sure?">
+                          class="inline">
                         ${csrfHiddenInput}
-                        <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                        <button type="button"
+                                onclick="showDeleteModal(document.getElementById('delete-page-${page.getId()}'), 'Are you sure you want to delete this page?')"
+                                class="text-red-600 hover:text-red-900">
+                            Delete
+                        </button>
                     </form>
                 </td>
             </tr>

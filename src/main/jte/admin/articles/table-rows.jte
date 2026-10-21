@@ -80,17 +80,16 @@
                         Edit
                     </a>
 
-                    <form action="/admin/articles/${article.getId()}/delete"
+                    <form id="delete-article-${article.getId()}" action="/admin/articles/${article.getId()}/delete?page=${articles.currentPage()}&size=${articles.pageSize()}${queryString}"
                           method="post"
                           hx-post="/admin/articles/${article.getId()}/delete?page=${articles.currentPage()}&size=${articles.pageSize()}${queryString}"
                           hx-target="#articles-table"
                           hx-swap="innerHTML"
-                          hx-confirm="Are you sure you want to delete this article?">
-
+                          class="inline ml-4">
                         ${csrfHiddenInput}
-
-                        <button type="submit"
-                                class="ml-4 text-red-600 hover:text-red-900">
+                        <button type="button"
+                                onclick="showDeleteModal(document.getElementById('delete-article-${article.getId()}'), 'Are you sure you want to delete this article?')"
+                                class="text-red-600 hover:text-red-900">
                             Delete
                         </button>
                     </form>

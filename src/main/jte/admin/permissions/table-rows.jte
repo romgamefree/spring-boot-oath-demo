@@ -63,15 +63,16 @@
                                    class="text-indigo-600 hover:text-indigo-900">
                                     Chỉnh sửa
                                 </a>
-                                <form action="/admin/permissions/${p.getId()}/delete"
+                                <form id="delete-permission-${p.getId()}" action="/admin/permissions/${p.getId()}/delete"
                                       method="post"
                                       hx-post="/admin/permissions/${p.getId()}/delete"
                                       hx-target="#permissions-table"
-                                      hx-confirm="Bạn có chắc chắn muốn xóa quyền này?"
-                                      class="inline">
+                                      hx-swap="innerHTML"
+                                      class="inline ml-2">
                                     ${csrf}
-                                    <button type="submit"
-                                            class="text-red-600 hover:text-red-900 ml-2">
+                                    <button type="button"
+                                            onclick="showDeleteModal(document.getElementById('delete-permission-${p.getId()}'), 'Are you sure you want to delete this permission?')"
+                                            class="text-red-600 hover:text-red-900">
                                         Xóa
                                     </button>
                                 </form>

@@ -110,15 +110,15 @@
                         </a>
 
                         @if(!"admin".equalsIgnoreCase(u.getUsername()))
-                            <form action="/admin/users/${u.getId()}/delete"
+                            <form id="delete-user-${u.getId()}" action="/admin/users/${u.getId()}/delete?page=${users.currentPage()}&size=${users.pageSize()}${queryString}"
                                   method="post"
                                   hx-post="/admin/users/${u.getId()}/delete?page=${users.currentPage()}&size=${users.pageSize()}${queryString}"
                                   hx-target="#users-table"
                                   hx-swap="innerHTML"
-                                  hx-confirm="Bạn có chắc chắn muốn xóa người dùng '${u.getUsername()}' không?"
                                   class="inline">
                                 ${csrf}
-                                <button type="submit"
+                                <button type="button"
+                                        onclick="showDeleteModal(document.getElementById('delete-user-${u.getId()}'), 'Are you sure you want to delete user ${u.getUsername()}?')"
                                         class="text-red-600 hover:text-red-900 text-xs font-semibold cursor-pointer">
                                     Xóa
                                 </button>
