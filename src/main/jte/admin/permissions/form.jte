@@ -13,89 +13,68 @@
 activePage = "permissions",
 content = @`
     <div class="mb-6">
-        <div class="flex items-center justify-between">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900">
-                    ${isEdit ? "Chỉnh sửa quyền" : "Thêm quyền mới"}
-                </h1>
-                <p class="text-sm text-gray-500 mt-1">
-                    ${isEdit ? "Cập nhật thông tin quyền" : "Tạo quyền mới trong hệ thống"}
-                </p>
-            </div>
+        <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-900">
+                ${isEdit ? "Edit" : "New"} Permission
+            </h1>
+
             <a href="/admin/permissions"
-               class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors">
-                Quay lại danh sách
+               class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">
+                Back to List
             </a>
         </div>
     </div>
 
-    <div class="bg-white shadow rounded-lg p-6 max-w-3xl">
+    <div class="bg-white shadow rounded-lg p-6">
         <form action="${isEdit ? "/admin/permissions/" + permission.getId() : "/admin/permissions"}"
-              method="post"
-              class="space-y-6">
-
+              method="post">
             ${csrf}
 
             @if(isEdit)
                 <input type="hidden" name="_method" value="put">
             @endif
 
-            <div class="grid grid-cols-1 gap-6">
-                <!-- Permission Name -->
+            <div class="space-y-6">
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">
-                        Tên quyền (Permission Name) <span class="text-red-500">*</span>
+                        Name
                     </label>
                     <input type="text"
                            id="name"
                            name="name"
                            value="${permission.getName() != null ? permission.getName() : ""}"
                            required
-                           minlength="3"
-                           maxlength="100"
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-                           placeholder="vd: article:create">
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
-                <!-- Module -->
                 <div>
                     <label for="module" class="block text-sm font-medium text-gray-700">
-                        Module <span class="text-red-500">*</span>
+                        Module
                     </label>
                     <input type="text"
                            id="module"
                            name="module"
                            value="${permission.getModule() != null ? permission.getModule() : ""}"
                            required
-                           maxlength="50"
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-                           placeholder="vd: articles, users, pages">
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
-                <!-- Description -->
                 <div>
                     <label for="description" class="block text-sm font-medium text-gray-700">
-                        Mô tả
+                        Description
                     </label>
                     <textarea id="description"
                               name="description"
                               rows="3"
-                              maxlength="255"
-                              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-                              placeholder="Mô tả chức năng của quyền này">${permission.getDescription() != null ? permission.getDescription() : ""}</textarea>
+                              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">${permission.getDescription() != null ? permission.getDescription() : ""}</textarea>
                 </div>
-            </div>
 
-            <!-- Submit -->
-            <div class="pt-4 border-t border-gray-200 flex items-center justify-end gap-3">
-                <a href="/admin/permissions"
-                   class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors">
-                    Hủy
-                </a>
-                <button type="submit"
-                        class="px-6 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    ${isEdit ? "Cập nhật quyền" : "Lưu quyền"}
-                </button>
+                <div>
+                    <button type="submit"
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        ${isEdit ? "Update" : "Create"} Permission
+                    </button>
+                </div>
             </div>
         </form>
     </div>
